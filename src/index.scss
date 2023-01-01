@@ -1,5 +1,30 @@
 @import "normalize.css/normalize.css";
 
+@import './src/constants/styles';
+
 *, *:before, *:after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+  background-color: #1E1E1E;
+  color: $COLOR-MAIN;
+  font-size: $FZ-MAIN;
+  font-family: 'Roboto', sans-serif;
+  font-weight: $FW-REGULAR;
+}
+
+.container {
+  max-width: 1220px;
+  padding: 0 20px;
+  width: 100%;
+  margin: 0 auto;
 }

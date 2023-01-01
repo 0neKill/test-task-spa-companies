@@ -1,0 +1,23 @@
+@import "/src/constants/styles";
+
+.btn {
+  width: 100%;
+  height: 30px;
+  background-color: #0361FF;
+  box-shadow: 0 4px 4px rgba(5, 15, 23, 0.25);
+  border: none;
+  border-radius: 5px;
+  color: $COLOR-MAIN;
+  font-size: $FZ-MAIN;
+  cursor: pointer;
+  transition: transform 5ms linear;
+
+  &:hover {
+    background-color: lighten(#0361FF, 10);
+  }
+
+  &:active {
+    background-color: darken(#0361FF, 20);
+    transform: scale(.97);
+  }
+}

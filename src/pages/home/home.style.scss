@@ -1,0 +1,35 @@
+@import "/src/constants/styles";
+
+.home {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  $home: &;
+
+  &-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+
+    #{$home}__title {
+      max-width: 435px;
+      width: 100%;
+      text-align: center;
+      color: #E9E9E9;
+      order: 2;
+
+      .title {
+        font-weight: $FW-MEDIUM;
+        font-size: 36px;
+        line-height: 42px;
+      }
+
+      .subtitle {
+        font-weight: $FW-MEDIUM;
+        font-size: 36px;
+        line-height: 42px;
+      }
+    }
+  }
+}

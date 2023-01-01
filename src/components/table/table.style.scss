@@ -1,0 +1,199 @@
+@import "/src/constants/styles";
+
+.table {
+  max-width: 580px;
+  height: 620px;
+  width: 100%;
+  background: #27292E;
+  border: 1px solid #000000;
+  box-shadow: 10px 11px 4px rgba(47, 50, 56, 0.25);
+  border-radius: 20px;
+  padding: 15px;
+  $table: &;
+  $mode: '.mode';
+
+  &.employees {
+    padding-top: 30px;
+    position: absolute;
+    height: 100%;
+    max-width: 42.36%;
+    border-radius: 0;
+    //max-width: 42.778%;
+    top: 0;
+    right: 0;
+
+    #{$table}-body {
+      height: 750px;
+    }
+  }
+
+  &.companies {
+    #{$table}-body {
+      height: 450px;
+    }
+  }
+
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    #{$table}__btn {
+      max-width: 100px;
+      margin-left: 15px;
+    }
+  }
+
+  &__wrapper {
+    margin-top: 13px;
+    background-color: transparent;
+    width: 100%;
+    $column: '.column';
+
+    #{$mode} {
+      &--companies {
+        .checkbox {
+          margin-right: 25px;
+        }
+
+        .one {
+          max-width: 100px;
+          width: 100%;
+          text-align: start;
+          margin-right: 29px;
+        }
+
+        .two {
+          max-width: 55px;
+          width: 100%;
+          text-align: start;
+          margin-right: 55px;
+        }
+
+        .three {
+          max-width: 185px;
+          width: 100%;
+          text-align: start;
+        }
+      }
+
+      &--employees {
+        .checkbox {
+          margin-right: 25px;
+        }
+
+        .one {
+          max-width: 100px;
+          width: 100%;
+          text-align: start;
+          margin-right: 37px;
+        }
+
+        .two {
+          max-width: 90px;
+          width: 100%;
+          text-align: start;
+          margin-right: 37px;
+        }
+
+        .three {
+          width: 100%;
+          text-align: start;
+        }
+      }
+    }
+
+    #{$table}__row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      $column: '.column';
+    }
+
+    #{$table}-head {
+      display: block;
+      width: 100%;
+      background: #404149;
+      box-shadow: 5px 0 4px rgba(0, 0, 0, 0.25);
+      border-radius: 5px 5px 0px 0px;
+      $table-head: '.table-head';
+      padding: 20px 15px;
+
+      &__row {
+        #{$table-head}__column {
+
+          #{$column}__title {
+            color: $COLOR-MAIN;
+            font-size: $FZ-MAIN;
+            font-weight: $FW-MEDIUM;
+          }
+        }
+      }
+    }
+
+    #{$table}-body {
+      display: block;
+      width: 100%;
+      $table-body: '.table-body';
+      overflow: auto;
+
+      &__row {
+        &--footer {
+          margin-left: 18px;
+          max-width: 37px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-width: 0 1px 1px 1px;
+        border-style: solid;
+        border-color: #404149;
+        filter: drop-shadow(5px 0px 4px rgba(0, 0, 0, 0.25));
+        cursor: pointer;
+        outline: none;
+
+        &.select {
+          border: 1px solid #914848;
+          filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.6));
+
+        }
+
+        &:hover:not(&.select), &:focus:not(&.select) {
+          border: 1px solid #E4E4E4;
+          filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.6));
+        }
+
+        #{$table-body}__column {
+          #{$column}__title {
+            line-height: 14px;
+            width: 100%;
+            display: block;
+            color: $COLOR-MAIN;
+            font-size: $FZ-ITEM;
+            font-weight: $FW-REGULAR;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            outline: none;
+            background-color: transparent;
+            border: 0;
+
+            &:not([disabled]), &:focus {
+              border: 1px solid #9397B4;
+              box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+}

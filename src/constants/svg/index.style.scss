@@ -1,0 +1,37 @@
+.constant--svg {
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+  border: 0;
+
+  &:focus {
+    height: 18px;
+    width: 18px;
+  }
+
+  svg {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+  }
+
+  path {
+    transition: fill 3ms linear, transform 3ms linear;
+    fill: #818181;
+  }
+
+  &:hover {
+    path {
+      fill: lighten(#818181, 10);
+    }
+  }
+
+  &:active {
+    path {
+      fill: darken(#818181, 20);
+      transform: scale(.8);
+    }
+  }
+
+}
