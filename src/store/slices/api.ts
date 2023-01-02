@@ -3,9 +3,18 @@ import { createSlice, Draft, PayloadAction, SliceCaseReducers } from '@reduxjs/t
 import { apiQueryThunk } from '../thunks';
 import { Company, Employee, Mode } from '../../__types__';
 
+export interface TableData {
+    id: string,
+    first: string,
+    second: string,
+    third: string
+}
+
+export type TableDataVector = TableData[];
+
 export type InitialStateApi = {
     [key in Mode]: {
-        data: Array<{ id: string, first: string, second: string, third: string }>,
+        data: TableDataVector,
         isLoading: boolean,
         error: string,
     };

@@ -17,12 +17,9 @@ export const Table: React.FunctionComponent<Props> = ({ data, mode, className, f
     )), [fixtureHead]);
 
     const tableRows = React.useMemo(() => data.map((item) => {
-        if ('firstname' in item) {
-            return <TableRow key={item.id} id={item.id} mode={mode}
-                             itemData={{ first: item.surname, second: item.firstname, three: item.position }} />;
-        }
-        return <TableRow key={item.id} id={item.id} mode={mode}
-                         itemData={{ first: item.name, second: item.total_count, three: item.address }} />;
+        return <TableRow key={item.id}
+                         mode={mode}
+                         itemData={item} />;
     }), [data, mode]);
 
     return (

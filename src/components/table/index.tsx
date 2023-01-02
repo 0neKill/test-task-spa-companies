@@ -2,22 +2,25 @@ import React from 'react';
 
 import './table.style.scss';
 
-import { Mode, type Company, Employee } from '../../__types__';
+import { Mode } from '../../__types__';
 
 import { Table } from './table';
 import { TableHeadCompanies, TableHeadEmployees, type ITableHead } from '../../constants';
+import { TableDataVector } from '../../store/slices/api';
 
 export interface Props {
-    data: Company[] | Employee[],
+    data: TableDataVector,
     className?: string,
     mode: Mode,
     fixtureHead: ITableHead[]
 }
 
+type FactoryTableFun<T> = (props: Omit<T, 'data'> & { data: TableDataVector }) => React.ReactElement;
+
 
 type FactoryTableProps<T extends Partial<Props>> = {
-    CreateCompanies: (props: Omit<T, 'data'> & { data: Company[] }) => React.ReactElement,
-    CreateEmployees: (props: Omit<T, 'data'> & { data: Employee[] }) => React.ReactElement,
+    CreateCompanies: FactoryTableFun<T>,
+    CreateEmployees: FactoryTableFun<T>,
 }
 
 
