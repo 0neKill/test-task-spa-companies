@@ -16,6 +16,13 @@ export const RequestData = {
         uri: 'employees.json',
     },
 };
+const delay = (ms: number) => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(true);
+        }, ms);
+    });
+};
 
 class Api {
     async query(arg: ThunkArg, offset: number, limit: number): Promise<AxiosResponse<Company[] | Employee[]>> {
@@ -24,6 +31,7 @@ class Api {
         if (arg.entryPoint === 'employees') {
             return data[arg.id];
         }
+        await delay(1000);
         return data;
         // return data.slice(offset, limit);
     };

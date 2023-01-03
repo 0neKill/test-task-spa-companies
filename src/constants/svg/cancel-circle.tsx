@@ -1,11 +1,11 @@
 import React from 'react';
 import { Props } from './__types__';
 
-export const CancelCircleSvg: React.FunctionComponent<Props> = ({ size = { w: 14, h: 14 } }) => {
+export const CancelCircleSvg: React.FunctionComponent<Props> = ({ size = { w: 14, h: 14 }, onClick }) => {
     const { h, w } = size;
 
     return (
-        <button className='constant--svg' style={{ width: w, height: h }}>
+        <button className='constant--svg' style={{ width: w, height: h }} onClick={onClick}>
             <svg width={w} height={h} viewBox='0 0 14 14' fill='none'
                  xmlns='http://www.w3.org/2000/svg'>
                 <path

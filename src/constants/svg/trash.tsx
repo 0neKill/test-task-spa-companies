@@ -2,10 +2,10 @@ import React from 'react';
 import { Props } from './__types__';
 
 
-export const TrashSvg: React.FunctionComponent<Props> = ({ size = { w: 14, h: 15 } }) => {
+export const TrashSvg: React.FunctionComponent<Props> = ({ size = { w: 14, h: 15 }, onClick }) => {
     const { h, w } = size;
     return (
-        <button className='constant--svg' style={{ width: w, height: h }}>
+        <button className='constant--svg' style={{ width: w, height: h }} onClick={onClick}>
             <svg width={w} height={h} viewBox='0 0 14 15' fill='none'
                  xmlns='http://www.w3.org/2000/svg'>
                 <path fillRule='evenodd' clipRule='evenodd'

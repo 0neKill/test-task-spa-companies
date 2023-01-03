@@ -4,18 +4,23 @@ import './table.style.scss';
 
 import { Mode } from '../../__types__';
 
-import { Table } from './table';
+import { SelectAll, Table } from './table';
 import { TableHeadCompanies, TableHeadEmployees, type ITableHead } from '../../constants';
-import { TableDataVector } from '../../store/slices/api';
+import { TableData, TableDataVector } from '../../store/slices/api';
 
 export interface Props {
-    data: TableDataVector,
+    data: TableDataVectorNonNull,
+    handlerOnGetCurrentItem?: (item: TableData | null) => void,
     className?: string,
     mode: Mode,
-    fixtureHead: ITableHead[]
+    fixtureHead: ITableHead[],
+    handlerOnSuccess: (item: TableData, mode: Mode) => void,
+    handlerOnDelete: (item: SelectAll, mode: Mode) => void,
 }
 
-type FactoryTableFun<T> = (props: Omit<T, 'data'> & { data: TableDataVector }) => React.ReactElement;
+export type TableDataVectorNonNull = NonNullable<TableDataVector>;
+
+type FactoryTableFun<T> = (props: Omit<T, 'data'> & { data: TableDataVectorNonNull }) => React.ReactElement;
 
 
 type FactoryTableProps<T extends Partial<Props>> = {
