@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import './home.style.scss';
 
@@ -12,14 +12,12 @@ export const Home: React.FunctionComponent = React.memo(() => {
     const { data, performance } = useQuery();
     const { resetDataByEntryPoint, addItem, deleteItems } = useDispatchedActions();
     const [currentItem, setCurrentItem] = React.useState<TableData | null>(null);
-    console.log(currentItem);
 
     React.useEffect(() => {
         performance({ entryPoint: Mode.COMPANIES });
     }, [performance]);
 
     React.useEffect(() => {
-        console.log('tyt');
         if (currentItem) {
             performance({ entryPoint: Mode.EMPLOYEES, id: currentItem.id });
         }
@@ -35,9 +33,7 @@ export const Home: React.FunctionComponent = React.memo(() => {
     }, []);
 
     const handlerOnDelete = (items: SelectAll, mode: Mode) => {
-
         deleteItems({ entryPoint: mode, items: items });
-
     };
 
     return (

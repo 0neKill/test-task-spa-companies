@@ -31,6 +31,10 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
                                                                         isSelect,
                                                                         itemData,
                                                                     }) => {
+
+    const isExist = React.useMemo(() => {
+        return itemData.first !== '' && itemData.second !== '' && itemData.third !== '';
+    }, [itemData]);
     return (
         <tr className={clsx('table__row', 'table-body__row', `mode--${mode}`, { select: isSelect && !isDisabled }, { select: isEdit })}
             tabIndex={0}>
@@ -60,7 +64,7 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
                         </>) :
                         (
                             <>
-                                <SuccessCircleSvg onClick={handlerOnSuccess.bind(this, itemData)} />
+                                {isExist && <SuccessCircleSvg onClick={handlerOnSuccess.bind(this, itemData)} />}
                                 <CancelCircleSvg onClick={handlerOnSetEditItem.bind(this, itemData, true)} />
                             </>
                         )

@@ -29,7 +29,7 @@ class Api {
         const _request = RequestData[arg.entryPoint];
         const { data } = await $api.get(_request.uri);
         if (arg.entryPoint === 'employees') {
-            return data[arg.id];
+            return data[arg.id] ?? [];
         }
         await delay(1000);
         return data;

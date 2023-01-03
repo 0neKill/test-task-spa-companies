@@ -8,6 +8,7 @@ import { Button } from '../../button';
 import { CheckBox } from '../../check-box';
 import { TableRow } from '../row';
 import { TableData } from '../../../store/slices/api';
+import { TableDataVectorNonNull } from '../index';
 
 export interface SelectAll {
     [keys: string]: TableData,
@@ -21,12 +22,25 @@ export const Table: React.FunctionComponent<Props> = ({
                                                           fixtureHead, handlerOnSuccess,
                                                           handlerOnDelete,
                                                       }) => {
+    const [tableData, setTableData] = React.useState<TableDataVectorNonNull>(() => data);
     const [selectItems, setSelectItems] = React.useState<SelectAll>({});
     const [isSelectAll, setIsSelectAll] = React.useState<boolean>(false);
     const [currentSelect, setCurrentSelect] = React.useState<TableData | null>(null);
     const [editItem, setEditItem] = React.useState<TableData | null>(null);
 
+    let newCreateItem = React.useRef<TableData | null>(null) as React.MutableRefObject<TableData | null>;
     const selectItemsLength = React.useMemo(() => Object.keys(selectItems).length, [selectItems]);
+
+    const handlerOnAddNewItem = () => {
+        const newItem = { id: Date.now().toString(), first: '', second: '', third: '' };
+        setTableData(prevState => [newItem, ...prevState]);
+        setEditItem(newItem);
+        newCreateItem.current = newItem;
+    };
+
+    React.useEffect(() => {
+        setTableData(data);
+    }, [data]);
 
     React.useEffect(() => {
         if (selectItemsLength === 1) {
@@ -37,35 +51,43 @@ export const Table: React.FunctionComponent<Props> = ({
     }, [selectItemsLength, handlerOnGetCurrentItem, currentSelect]);
 
     React.useEffect(() => {
-        if (data?.length === selectItemsLength && selectItemsLength !== 0) {
+        if (tableData?.length === selectItemsLength && selectItemsLength !== 0) {
             setIsSelectAll(true);
         } else {
             setIsSelectAll(false);
         }
-    }, [data, selectItemsLength, setIsSelectAll]);
+    }, [tableData, selectItemsLength, setIsSelectAll]);
 
     const handlerOnSelectAll = React.useCallback(() => {
         let _selectAll = {};
         if (!isSelectAll) {
-            _selectAll = data?.reduce((acc, item) => {
+            _selectAll = tableData.reduce((acc, item) => {
                 acc[item.id] = item;
                 return acc;
             }, {} as SelectAll);
         }
         setSelectItems(_selectAll);
-    }, [data, setSelectItems, isSelectAll]);
+    }, [tableData, setSelectItems, isSelectAll]);
 
     const handlerOnSetEditItem = React.useCallback((item: TableData, isCancel: boolean) => {
-        setEditItem(!isCancel ? item : null);
-    }, []);
+        if (isCancel) {
+            setEditItem(null);
+            newCreateItem.current && newCreateItem.current.id === item.id && setTableData(prevState => prevState?.filter(_ => _.id !== item.id));
+            newCreateItem.current = null;
+        } else {
+            setEditItem(item);
+        }
+
+    }, [newCreateItem]);
 
     const handlerOnChangeEditItem = (field: 'first' | 'second' | 'third') => React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setEditItem((prevState: any) => ({ ...prevState, [field]: value }));
+        setEditItem((prevState: unknown) => ({ ...prevState as TableData, [field]: value }));
     }, []);
 
     const onSuccess = React.useCallback((item: TableData) => {
         setEditItem(null);
+        newCreateItem.current && (newCreateItem.current = null);
         handlerOnSuccess(item, mode);
     }, [setEditItem, handlerOnSuccess, mode]);
 
@@ -100,7 +122,7 @@ export const Table: React.FunctionComponent<Props> = ({
         </th>
     )), [fixtureHead]);
 
-    const tableRows = React.useMemo(() => data.map((item) => {
+    const tableRows = React.useMemo(() => tableData.map((item) => {
         return <TableRow key={item.id}
                          handlerOnDelete={onDelete}
                          handlerOnChangeEditItem={handlerOnChangeEditItem}
@@ -112,13 +134,13 @@ export const Table: React.FunctionComponent<Props> = ({
                          mode={mode}
                          isSelect={!!selectItems[item.id]}
                          itemData={editItem?.id === item.id ? editItem : item} />;
-    }), [data, mode, selectItems, handlerOnSelect, editItem, handlerOnSetEditItem, handlerOnChangeEditItem, onSuccess, onDelete]);
+    }), [tableData, mode, selectItems, handlerOnSelect, editItem, handlerOnSetEditItem, handlerOnChangeEditItem, onSuccess, onDelete]);
 
     return (
         <div className={clsx('table', className, mode)}>
             <div className='table__header'>
                 {!!selectItemsLength && <TrashSvg onClick={() => onDelete()} />}
-                <Button className='table__btn'>Add</Button>
+                <Button className='table__btn' onClick={handlerOnAddNewItem} disabled={!!editItem}>Add</Button>
             </div>
             <table className='table__wrapper'>
                 <thead className='table-head'>
@@ -133,7 +155,7 @@ export const Table: React.FunctionComponent<Props> = ({
                 </thead>
                 <tbody className='table-body'>
                 {
-                    !!data.length ? tableRows : <tr>
+                    !!tableData.length ? tableRows : <tr>
                         <td>Список пуст...</td>
                     </tr>
                 }

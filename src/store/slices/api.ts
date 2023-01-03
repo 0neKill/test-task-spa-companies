@@ -57,7 +57,7 @@ export const apiSlice = createSlice<InitialStateApi, IAuthorizationReducer<Initi
             if (state[action.payload.entryPoint].data) {
                 const idx = state[action.payload.entryPoint].data!.findIndex((_) => _.id === item.id);
                 idx >= 0 ? (state[action.payload.entryPoint].data![idx] = { ...state[action.payload.entryPoint].data![idx], ...item }) : (
-                    state[action.payload.entryPoint].data = [...state[action.payload.entryPoint].data!, item]
+                    state[action.payload.entryPoint].data = [item, ...state[action.payload.entryPoint].data!]
                 );
             } else {
                 state[action.payload.entryPoint].data = [action.payload.item];
