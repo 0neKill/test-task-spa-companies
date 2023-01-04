@@ -1,6 +1,8 @@
-import { Company, Employee, Mode } from '../../__types__';
 import axios, { AxiosResponse } from 'axios';
-import { ThunkArg } from '../../store/thunks';
+
+import type { Company, Employee } from '../../__types__';
+import type { ThunkArg } from '../../store/thunks';
+import { EntryPoint } from '../../__types__';
 
 
 const $api = axios.create({
@@ -8,12 +10,10 @@ const $api = axios.create({
 });
 
 
+
 export const RequestData = {
-    [Mode.COMPANIES]: {
+    [EntryPoint.COMPANIES]: {
         uri: 'companies.json',
-    },
-    [Mode.EMPLOYEES]: {
-        uri: 'employees.json',
     },
 };
 const delay = (ms: number) => {
@@ -25,15 +25,11 @@ const delay = (ms: number) => {
 };
 
 class Api {
-    async query(arg: ThunkArg, offset: number, limit: number): Promise<AxiosResponse<Company[] | Employee[]>> {
+    async query(arg: ThunkArg): Promise<AxiosResponse<Company[] | Employee[]>> {
         const _request = RequestData[arg.entryPoint];
         const { data } = await $api.get(_request.uri);
-        if (arg.entryPoint === 'employees') {
-            return data[arg.id] ?? [];
-        }
         await delay(1000);
         return data;
-        // return data.slice(offset, limit);
     };
 }
 

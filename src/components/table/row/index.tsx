@@ -1,21 +1,24 @@
 import React from 'react';
+import clsx from 'clsx';
+
 import { CheckBox } from '../../check-box';
 import { CancelCircleSvg, PanEditSvg, SuccessCircleSvg, TrashSvg } from '../../../constants';
-import type { Mode } from '../../../__types__';
-import clsx from 'clsx';
-import { TableData } from '../../../store/slices/api';
+
+import type { TableMode } from '../../../__types__';
+import type { TableData } from '../index';
 
 interface Props {
-    mode: Mode,
+    mode: TableMode,
     itemData: TableData,
+    isEdit: boolean,
+    isSelect: boolean,
+    isDisabled: boolean,
+    handlerOnSuccess: () => void,
+    handlerOnDelete: (item: TableData) => void,
     handlerOnSelect: (item: TableData) => void,
     handlerOnSetEditItem: (item: TableData, isCancel: boolean) => void,
     handlerOnChangeEditItem: (field: 'first' | 'second' | 'third') => (e: React.ChangeEvent<HTMLInputElement>) => void,
-    handlerOnSuccess: (item: TableData) => void,
-    handlerOnDelete: (item: TableData) => void,
-    isSelect: boolean,
-    isEdit: boolean,
-    isDisabled: boolean,
+
 }
 
 
@@ -31,10 +34,10 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
                                                                         isSelect,
                                                                         itemData,
                                                                     }) => {
-
     const isExist = React.useMemo(() => {
-        return itemData.first !== '' && itemData.second !== '' && itemData.third !== '';
+        return itemData.first !== '' && itemData.third !== '';
     }, [itemData]);
+
     return (
         <tr className={clsx('table__row', 'table-body__row', `mode--${mode}`, { select: isSelect && !isDisabled }, { select: isEdit })}
             tabIndex={0}>
@@ -48,7 +51,8 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
                        onChange={handlerOnChangeEditItem('first')} />
             </td>
             <td className={`table-body__column two`}>
-                <input className='column__title' type='text' value={itemData.second} disabled={!isEdit}
+                <input className='column__title' type='text' value={itemData.second}
+                       disabled={(mode === 'companies') || !isEdit}
                        onChange={handlerOnChangeEditItem('second')} />
             </td>
             <td className={`table-body__column three`}>
@@ -64,7 +68,7 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
                         </>) :
                         (
                             <>
-                                {isExist && <SuccessCircleSvg onClick={handlerOnSuccess.bind(this, itemData)} />}
+                                {isExist && <SuccessCircleSvg onClick={handlerOnSuccess} />}
                                 <CancelCircleSvg onClick={handlerOnSetEditItem.bind(this, itemData, true)} />
                             </>
                         )

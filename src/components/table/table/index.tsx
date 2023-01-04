@@ -1,42 +1,39 @@
 import React from 'react';
 import clsx from 'clsx';
 
-import type { Props } from '../index';
-
 import { TrashSvg } from '../../../constants';
-import { Button } from '../../button';
 import { CheckBox } from '../../check-box';
+import { Button } from '../../button';
 import { TableRow } from '../row';
-import { TableData } from '../../../store/slices/api';
-import { TableDataVectorNonNull } from '../index';
 
-export interface SelectAll {
-    [keys: string]: TableData,
-}
+import type { Props, SelectAll, TableData, TableDataVector } from '../index';
+
 
 export const Table: React.FunctionComponent<Props> = ({
                                                           data,
+                                                          isLoading,
+                                                          errorMessage,
                                                           handlerOnGetCurrentItem,
                                                           mode,
                                                           className,
-                                                          fixtureHead, handlerOnSuccess,
+                                                          fixtureHead,
+                                                          handlerOnSuccess,
                                                           handlerOnDelete,
                                                       }) => {
-    const [tableData, setTableData] = React.useState<TableDataVectorNonNull>(() => data);
+    const [tableData, setTableData] = React.useState<TableDataVector>(() => data);
     const [selectItems, setSelectItems] = React.useState<SelectAll>({});
     const [isSelectAll, setIsSelectAll] = React.useState<boolean>(false);
-    const [currentSelect, setCurrentSelect] = React.useState<TableData | null>(null);
     const [editItem, setEditItem] = React.useState<TableData | null>(null);
 
     let newCreateItem = React.useRef<TableData | null>(null) as React.MutableRefObject<TableData | null>;
     const selectItemsLength = React.useMemo(() => Object.keys(selectItems).length, [selectItems]);
 
-    const handlerOnAddNewItem = () => {
+    const handlerOnAddNewItem = React.useCallback(() => {
         const newItem = { id: Date.now().toString(), first: '', second: '', third: '' };
         setTableData(prevState => [newItem, ...prevState]);
         setEditItem(newItem);
         newCreateItem.current = newItem;
-    };
+    }, [setTableData, setEditItem, newCreateItem]);
 
     React.useEffect(() => {
         setTableData(data);
@@ -44,14 +41,14 @@ export const Table: React.FunctionComponent<Props> = ({
 
     React.useEffect(() => {
         if (selectItemsLength === 1) {
-            handlerOnGetCurrentItem && handlerOnGetCurrentItem(currentSelect);
+            handlerOnGetCurrentItem && handlerOnGetCurrentItem(Object.values(selectItems)[0].id);
         } else {
             handlerOnGetCurrentItem && handlerOnGetCurrentItem(null);
         }
-    }, [selectItemsLength, handlerOnGetCurrentItem, currentSelect]);
+    }, [selectItemsLength, handlerOnGetCurrentItem, selectItems]);
 
     React.useEffect(() => {
-        if (tableData?.length === selectItemsLength && selectItemsLength !== 0) {
+        if (tableData.length === selectItemsLength && selectItemsLength !== 0) {
             setIsSelectAll(true);
         } else {
             setIsSelectAll(false);
@@ -85,26 +82,24 @@ export const Table: React.FunctionComponent<Props> = ({
         setEditItem((prevState: unknown) => ({ ...prevState as TableData, [field]: value }));
     }, []);
 
-    const onSuccess = React.useCallback((item: TableData) => {
+    const onSuccess = React.useCallback(() => {
         setEditItem(null);
+        const isNew = editItem?.id === newCreateItem.current?.id;
+        handlerOnSuccess(editItem!, isNew);
         newCreateItem.current && (newCreateItem.current = null);
-        handlerOnSuccess(item, mode);
-    }, [setEditItem, handlerOnSuccess, mode]);
+    }, [setEditItem, handlerOnSuccess, editItem, newCreateItem]);
 
     const onDelete = React.useCallback((item?: TableData) => {
         if (item) {
-            handlerOnDelete({ [item.id]: item }, mode);
+            handlerOnDelete({ [item.id]: item });
         } else {
-            setCurrentSelect(null);
             setSelectItems({});
-            handlerOnDelete(selectItems, mode);
+            handlerOnDelete(selectItems);
         }
-    }, [selectItems, mode, handlerOnDelete, setCurrentSelect]);
+    }, [selectItems, mode, handlerOnDelete]);
 
 
     const handlerOnSelect = React.useCallback((item: TableData) => {
-
-        setCurrentSelect(item);
         if (selectItems[item.id]) {
             setSelectItems(prevState => {
                 const copyPrevState = { ...prevState };
@@ -114,7 +109,7 @@ export const Table: React.FunctionComponent<Props> = ({
         } else {
             setSelectItems(prevState => ({ ...prevState, [item.id]: item }));
         }
-    }, [selectItems, setSelectItems, selectItemsLength, handlerOnSelectAll, setCurrentSelect]);
+    }, [selectItems, setSelectItems, selectItemsLength, handlerOnSelectAll]);
 
     const headerColumns = React.useMemo(() => fixtureHead.map(item => (
         <th key={item.id} className={`table-head__column ${item.className}`}>
@@ -136,31 +131,39 @@ export const Table: React.FunctionComponent<Props> = ({
                          itemData={editItem?.id === item.id ? editItem : item} />;
     }), [tableData, mode, selectItems, handlerOnSelect, editItem, handlerOnSetEditItem, handlerOnChangeEditItem, onSuccess, onDelete]);
 
+
     return (
         <div className={clsx('table', className, mode)}>
-            <div className='table__header'>
-                {!!selectItemsLength && <TrashSvg onClick={() => onDelete()} />}
-                <Button className='table__btn' onClick={handlerOnAddNewItem} disabled={!!editItem}>Add</Button>
-            </div>
-            <table className='table__wrapper'>
-                <thead className='table-head'>
-                <tr className={`table__row table-head__row mode--${mode}`}>
-                    <th className={`table-head__column checkbox`}>
-                        <CheckBox id={`header-checkbox-${mode}`} isChecked={isSelectAll}
-                                  isDisabled={!!editItem}
-                                  onChange={handlerOnSelectAll} />
-                    </th>
-                    {headerColumns}
-                </tr>
-                </thead>
-                <tbody className='table-body'>
-                {
-                    !!tableData.length ? tableRows : <tr>
-                        <td>Список пуст...</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+            {
+                errorMessage ? <div>{errorMessage}</div> :
+                    isLoading ? <div>Loading...</div> :
+                        <>
+                            <div className='table__header'>
+                                {!!selectItemsLength && <TrashSvg onClick={() => onDelete()} />}
+                                <Button className='table__btn' onClick={handlerOnAddNewItem}
+                                        disabled={!!editItem}>Add</Button>
+                            </div>
+                            <table className='table__wrapper'>
+                                <thead className='table-head'>
+                                <tr className={`table__row table-head__row mode--${mode}`}>
+                                    <th className={`table-head__column checkbox`}>
+                                        <CheckBox id={`header-checkbox-${mode}`} isChecked={isSelectAll}
+                                                  isDisabled={!!editItem}
+                                                  onChange={handlerOnSelectAll} />
+                                    </th>
+                                    {headerColumns}
+                                </tr>
+                                </thead>
+                                <tbody className='table-body'>
+                                {
+                                    !!tableData.length ? tableRows : <tr>
+                                        <td>Список пуст...</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </>
+            }
         </div>
     );
 };

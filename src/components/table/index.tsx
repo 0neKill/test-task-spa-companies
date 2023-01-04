@@ -2,25 +2,37 @@ import React from 'react';
 
 import './table.style.scss';
 
-import { Mode } from '../../__types__';
+import { TableMode } from '../../__types__';
 
-import { SelectAll, Table } from './table';
+import { Table } from './table';
 import { TableHeadCompanies, TableHeadEmployees, type ITableHead } from '../../constants';
-import { TableData, TableDataVector } from '../../store/slices/api';
 
-export interface Props {
-    data: TableDataVectorNonNull,
-    handlerOnGetCurrentItem?: (item: TableData | null) => void,
-    className?: string,
-    mode: Mode,
-    fixtureHead: ITableHead[],
-    handlerOnSuccess: (item: TableData, mode: Mode) => void,
-    handlerOnDelete: (item: SelectAll, mode: Mode) => void,
+export interface TableData {
+    id: string,
+    first: string,
+    second: string,
+    third: string
 }
 
-export type TableDataVectorNonNull = NonNullable<TableDataVector>;
+export interface SelectAll {
+    [keys: string]: TableData,
+}
 
-type FactoryTableFun<T> = (props: Omit<T, 'data'> & { data: TableDataVectorNonNull }) => React.ReactElement;
+export interface Props {
+    mode: TableMode,
+    data: TableDataVector,
+    fixtureHead: ITableHead[],
+    handlerOnSuccess: (item: TableData, isNew: boolean, deep?: boolean) => void,
+    handlerOnDelete: (item: SelectAll, deep?: boolean) => void,
+    handlerOnGetCurrentItem?: (itemId: string | null) => void,
+    isLoading?: boolean,
+    errorMessage?: string,
+    className?: string,
+}
+
+export type TableDataVector = TableData[];
+
+type FactoryTableFun<T> = (props: Omit<T, 'data'> & { data: TableDataVector }) => React.ReactElement;
 
 
 type FactoryTableProps<T extends Partial<Props>> = {
@@ -30,6 +42,10 @@ type FactoryTableProps<T extends Partial<Props>> = {
 
 
 export const FactoryTable: FactoryTableProps<Omit<Props, 'mode' | 'fixtureHead'>> = ({
-    CreateCompanies: (props) => <Table {...props} mode={Mode.COMPANIES} fixtureHead={TableHeadCompanies} />,
-    CreateEmployees: (props) => <Table {...props} mode={Mode.EMPLOYEES} fixtureHead={TableHeadEmployees} />,
+    CreateCompanies: (props) => <Table {...props} mode={TableMode.COMPANIES} fixtureHead={TableHeadCompanies} />,
+    CreateEmployees: (props) => <Table {...props}
+                                       handlerOnDelete={(selectAll) => props.handlerOnDelete(selectAll, true)}
+                                       handlerOnSuccess={(tableData, isNew) => props.handlerOnSuccess(tableData, isNew, true)}
+                                       mode={TableMode.EMPLOYEES}
+                                       fixtureHead={TableHeadEmployees} />,
 });

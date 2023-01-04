@@ -1,22 +1,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Mode } from '../../__types__';
-import { api } from '../../helpers/services';
 import { apiSlice } from '../slices/api';
+import { api } from '../../helpers';
+import { EntryPoint } from '../../__types__/entryPoint';
 
 
-type Employees = {
-    entryPoint: typeof Mode.EMPLOYEES,
-    id: string,
-}
 type Companies = {
-    entryPoint: typeof Mode.COMPANIES,
+    entryPoint: typeof EntryPoint.COMPANIES,
 }
-export type ThunkArg = Employees | Companies;
+export type ThunkArg = Companies;
 
 export const apiQueryThunk = createAsyncThunk('api/queryByEntrypoint', async (arg: ThunkArg, thunkAPI) => {
     thunkAPI.dispatch(apiSlice.actions.setLoading({ entryPoint: arg.entryPoint, isLoading: true }));
     try {
-        const data = await api.query(arg, 0, 10);
+        const data = await api.query(arg);
         return {
             entryPoint: arg.entryPoint,
             data: data,
