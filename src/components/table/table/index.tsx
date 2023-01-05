@@ -48,10 +48,9 @@ export const Table: React.FunctionComponent<Props> = ({
 
     React.useEffect(() => {
         if (inView) {
-            console.log(34);
             setOffset(prevState => prevState + Math.floor(height / 50) + 1);
         }
-    }, [inView]);
+    }, [height, inView]);
 
     React.useEffect(() => {
         if (selectItemsLength === 1) {
@@ -145,7 +144,7 @@ export const Table: React.FunctionComponent<Props> = ({
                          isSelect={!!selectItems[item.id]}
                          itemData={editItem?.id === item.id ? editItem : item} />;
 
-    }), [offset, editItem, handlerOnChangeEditItem, handlerOnSelect, handlerOnSetEditItem, mode, onDelete, onSuccess, selectItems, tableData]);
+    }), [ref, offset, editItem, handlerOnChangeEditItem, handlerOnSelect, handlerOnSetEditItem, mode, onDelete, onSuccess, selectItems, tableData]);
 
 
     return (
