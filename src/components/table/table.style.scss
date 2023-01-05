@@ -18,18 +18,21 @@
     height: 100%;
     max-width: 42.36%;
     border-radius: 0;
-    //max-width: 42.778%;
     top: 0;
     right: 0;
+    @media (max-width: $DM-TABLE-SM) {
+      max-width: 70%;
+
+    }
 
     #{$table}-body {
-      height: 750px;
+      //height: 750px;
     }
   }
 
   &.companies {
     #{$table}-body {
-      height: 450px;
+      //height: 450px;
     }
   }
 
@@ -62,6 +65,9 @@
           width: 100%;
           text-align: start;
           margin-right: 29px;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
 
         .two {
@@ -69,12 +75,18 @@
           width: 100%;
           text-align: start;
           margin-right: 55px;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
 
         .three {
           max-width: 185px;
           width: 100%;
           text-align: start;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
       }
 
@@ -88,6 +100,9 @@
           width: 100%;
           text-align: start;
           margin-right: 37px;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
 
         .two {
@@ -95,11 +110,17 @@
           width: 100%;
           text-align: start;
           margin-right: 37px;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
 
         .three {
           width: 100%;
           text-align: start;
+          @media (max-width: $DM-TABLE-SM) {
+            margin-right: 10px;
+          }
         }
       }
     }
@@ -121,12 +142,16 @@
       padding: 20px 15px;
 
       &__row {
+
         #{$table-head}__column {
 
           #{$column}__title {
             color: $COLOR-MAIN;
             font-size: $FZ-MAIN;
             font-weight: $FW-MEDIUM;
+            @media (max-width: $DM-TABLE-SM) {
+              font-size: 10px;
+            }
           }
         }
       }
@@ -183,6 +208,9 @@
             outline: none;
             background-color: transparent;
             border: 0;
+            @media (max-width: $DM-TABLE-SM) {
+              font-size: 10px;
+            }
 
             &:not([disabled]), &:focus {
               border: 1px solid #9397B4;
@@ -191,11 +219,6 @@
             }
           }
 
-          span {
-            border: 0 !important;
-            box-shadow: none !important;
-            cursor: default !important;
-          }
         }
       }
     }

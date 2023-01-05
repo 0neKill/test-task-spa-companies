@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { useInView } from 'react-intersection-observer';
 
 import { TrashSvg } from '../../../constants';
 import { CheckBox } from '../../check-box';
@@ -19,11 +20,17 @@ export const Table: React.FunctionComponent<Props> = ({
                                                           fixtureHead,
                                                           handlerOnSuccess,
                                                           handlerOnDelete,
+                                                          height,
                                                       }) => {
     const [tableData, setTableData] = React.useState<TableDataVector>(() => data);
     const [selectItems, setSelectItems] = React.useState<SelectAll>({});
     const [isSelectAll, setIsSelectAll] = React.useState<boolean>(false);
     const [editItem, setEditItem] = React.useState<TableData | null>(null);
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+        threshold: 1,
+    });
+    const [offset, setOffset] = React.useState<number>(Math.floor(height / 50) + 1);
 
     let newCreateItem = React.useRef<TableData | null>(null) as React.MutableRefObject<TableData | null>;
     const selectItemsLength = React.useMemo(() => Object.keys(selectItems).length, [selectItems]);
@@ -40,6 +47,13 @@ export const Table: React.FunctionComponent<Props> = ({
     }, [data]);
 
     React.useEffect(() => {
+        if (inView) {
+            console.log(34);
+            setOffset(prevState => prevState + Math.floor(height / 50) + 1);
+        }
+    }, [inView]);
+
+    React.useEffect(() => {
         if (selectItemsLength === 1) {
             handlerOnGetCurrentItem && handlerOnGetCurrentItem(Object.values(selectItems)[0].id);
         } else {
@@ -53,7 +67,7 @@ export const Table: React.FunctionComponent<Props> = ({
         } else {
             setIsSelectAll(false);
         }
-    }, [tableData, selectItemsLength, setIsSelectAll]);
+    }, [selectItemsLength, tableData]);
 
     const handlerOnSelectAll = React.useCallback(() => {
         let _selectAll = {};
@@ -64,7 +78,7 @@ export const Table: React.FunctionComponent<Props> = ({
             }, {} as SelectAll);
         }
         setSelectItems(_selectAll);
-    }, [tableData, setSelectItems, isSelectAll]);
+    }, [isSelectAll, tableData]);
 
     const handlerOnSetEditItem = React.useCallback((item: TableData, isCancel: boolean) => {
         if (isCancel) {
@@ -74,10 +88,9 @@ export const Table: React.FunctionComponent<Props> = ({
         } else {
             setEditItem(item);
         }
+    }, []);
 
-    }, [newCreateItem]);
-
-    const handlerOnChangeEditItem = (field: 'first' | 'second' | 'third') => React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const handlerOnChangeEditItem = React.useCallback((field: 'first' | 'second' | 'third') => (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setEditItem((prevState: unknown) => ({ ...prevState as TableData, [field]: value }));
     }, []);
@@ -87,7 +100,7 @@ export const Table: React.FunctionComponent<Props> = ({
         const isNew = editItem?.id === newCreateItem.current?.id;
         handlerOnSuccess(editItem!, isNew);
         newCreateItem.current && (newCreateItem.current = null);
-    }, [setEditItem, handlerOnSuccess, editItem, newCreateItem]);
+    }, [handlerOnSuccess, editItem]);
 
     const onDelete = React.useCallback((item?: TableData) => {
         if (item) {
@@ -96,7 +109,7 @@ export const Table: React.FunctionComponent<Props> = ({
             setSelectItems({});
             handlerOnDelete(selectItems);
         }
-    }, [selectItems, mode, handlerOnDelete]);
+    }, [handlerOnDelete, selectItems]);
 
 
     const handlerOnSelect = React.useCallback((item: TableData) => {
@@ -109,7 +122,7 @@ export const Table: React.FunctionComponent<Props> = ({
         } else {
             setSelectItems(prevState => ({ ...prevState, [item.id]: item }));
         }
-    }, [selectItems, setSelectItems, selectItemsLength, handlerOnSelectAll]);
+    }, [selectItems]);
 
     const headerColumns = React.useMemo(() => fixtureHead.map(item => (
         <th key={item.id} className={`table-head__column ${item.className}`}>
@@ -117,8 +130,10 @@ export const Table: React.FunctionComponent<Props> = ({
         </th>
     )), [fixtureHead]);
 
-    const tableRows = React.useMemo(() => tableData.map((item) => {
+    const tableRows = React.useMemo(() => tableData.slice(0, offset).map((item, index, array) => {
+
         return <TableRow key={item.id}
+                         lastRowRef={index === array.length - 1 ? ref : undefined}
                          handlerOnDelete={onDelete}
                          handlerOnChangeEditItem={handlerOnChangeEditItem}
                          handlerOnSuccess={onSuccess}
@@ -129,7 +144,8 @@ export const Table: React.FunctionComponent<Props> = ({
                          mode={mode}
                          isSelect={!!selectItems[item.id]}
                          itemData={editItem?.id === item.id ? editItem : item} />;
-    }), [tableData, mode, selectItems, handlerOnSelect, editItem, handlerOnSetEditItem, handlerOnChangeEditItem, onSuccess, onDelete]);
+
+    }), [offset, editItem, handlerOnChangeEditItem, handlerOnSelect, handlerOnSetEditItem, mode, onDelete, onSuccess, selectItems, tableData]);
 
 
     return (
@@ -154,7 +170,7 @@ export const Table: React.FunctionComponent<Props> = ({
                                     {headerColumns}
                                 </tr>
                                 </thead>
-                                <tbody className='table-body'>
+                                <tbody className='table-body' style={{ height }}>
                                 {
                                     !!tableData.length ? tableRows : <tr>
                                         <td>Список пуст...</td>

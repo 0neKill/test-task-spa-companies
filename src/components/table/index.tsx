@@ -28,6 +28,7 @@ export interface Props {
     isLoading?: boolean,
     errorMessage?: string,
     className?: string,
+    height: number,
 }
 
 export type TableDataVector = TableData[];
@@ -41,9 +42,11 @@ type FactoryTableProps<T extends Partial<Props>> = {
 }
 
 
-export const FactoryTable: FactoryTableProps<Omit<Props, 'mode' | 'fixtureHead'>> = ({
-    CreateCompanies: (props) => <Table {...props} mode={TableMode.COMPANIES} fixtureHead={TableHeadCompanies} />,
+export const FactoryTable: FactoryTableProps<Omit<Props, 'mode' | 'fixtureHead' | 'height'>> = ({
+    CreateCompanies: (props) => <Table {...props} height={450} mode={TableMode.COMPANIES}
+                                       fixtureHead={TableHeadCompanies} />,
     CreateEmployees: (props) => <Table {...props}
+                                       height={750}
                                        handlerOnDelete={(selectAll) => props.handlerOnDelete(selectAll, true)}
                                        handlerOnSuccess={(tableData, isNew) => props.handlerOnSuccess(tableData, isNew, true)}
                                        mode={TableMode.EMPLOYEES}

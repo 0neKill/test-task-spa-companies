@@ -2,7 +2,7 @@ import { useDispatchedActions } from './use-dispatched';
 import React from 'react';
 import { ThunkArg } from '../../store/thunks';
 import { useTypedSelector } from './use-typed-selector';
-import { getDataByEntrypoint } from '../selectors/api';
+import { getDataByEntrypoint } from '../selectors';
 
 
 export const useQuery = () => {

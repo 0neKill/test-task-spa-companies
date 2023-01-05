@@ -4,13 +4,21 @@
   height: 100vh;
   display: flex;
   align-items: center;
+  overflow: hidden;
   $home: &;
+  @media (max-width: $DM-SM) {
+    display: block;
+    margin-top: 50px;
+  }
 
   &-container {
     display: flex;
     align-items: center;
     width: 100%;
     justify-content: space-between;
+    @media (max-width: $DM-SM) {
+      flex-direction: column;
+    }
 
     #{$home}__title {
       max-width: 435px;
@@ -18,17 +26,27 @@
       text-align: center;
       color: #E9E9E9;
       order: 2;
+      @media (max-width: $DM-SM) {
+        order: 0;
+        margin-bottom: 20px;
+      }
 
       .title {
         font-weight: $FW-MEDIUM;
         font-size: 36px;
         line-height: 42px;
+        @media (max-width: $DM-TABLE) {
+          font-size: 25px;
+        }
       }
 
       .subtitle {
         font-weight: $FW-MEDIUM;
         font-size: 36px;
         line-height: 42px;
+        @media (max-width: $DM-TABLE) {
+          font-size: 25px;
+        }
       }
     }
   }

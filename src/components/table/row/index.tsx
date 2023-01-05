@@ -18,11 +18,12 @@ interface Props {
     handlerOnSelect: (item: TableData) => void,
     handlerOnSetEditItem: (item: TableData, isCancel: boolean) => void,
     handlerOnChangeEditItem: (field: 'first' | 'second' | 'third') => (e: React.ChangeEvent<HTMLInputElement>) => void,
-
+    lastRowRef?: () => void,
 }
 
 
 export const TableRow: React.FunctionComponent<Props> = React.memo(({
+                                                                        lastRowRef,
                                                                         mode,
                                                                         isEdit,
                                                                         isDisabled,
@@ -39,7 +40,8 @@ export const TableRow: React.FunctionComponent<Props> = React.memo(({
     }, [itemData]);
 
     return (
-        <tr className={clsx('table__row', 'table-body__row', `mode--${mode}`, { select: isSelect && !isDisabled }, { select: isEdit })}
+        <tr ref={lastRowRef}
+            className={clsx('table__row', 'table-body__row', `mode--${mode}`, { select: isSelect && !isDisabled }, { select: isEdit })}
             tabIndex={0}>
             <td className={`table-body__column checkbox`}>
                 <CheckBox id={`body-checkbox-${mode}-${itemData.id}`} isChecked={isSelect}
