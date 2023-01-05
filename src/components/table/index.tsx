@@ -46,7 +46,7 @@ export const FactoryTable: FactoryTableProps<Omit<Props, 'mode' | 'fixtureHead' 
     CreateCompanies: (props) => <Table {...props} height={450} mode={TableMode.COMPANIES}
                                        fixtureHead={TableHeadCompanies} />,
     CreateEmployees: (props) => <Table {...props}
-                                       height={750}
+                                       height={550}
                                        handlerOnDelete={(selectAll) => props.handlerOnDelete(selectAll, true)}
                                        handlerOnSuccess={(tableData, isNew) => props.handlerOnSuccess(tableData, isNew, true)}
                                        mode={TableMode.EMPLOYEES}

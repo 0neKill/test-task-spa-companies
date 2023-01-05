@@ -10,6 +10,9 @@
     display: block;
     margin-top: 50px;
   }
+  @media (max-height: $DM-TABLE-H) {
+    //height: 100%;
+  }
 
   &-container {
     display: flex;

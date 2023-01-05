@@ -26,12 +26,22 @@
     }
 
     #{$table}-body {
+      @media (max-height: $DM-TABLE-H) {
+        height: 400px !important;
+      }
       //height: 750px;
     }
   }
 
   &.companies {
+    @media (max-height: $DM-TABLE-H) {
+      height: 100%;
+    }
+
     #{$table}-body {
+      @media (max-height: $DM-TABLE-H) {
+        height: 300px !important;
+      }
       //height: 450px;
     }
   }
