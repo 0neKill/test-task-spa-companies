@@ -1,7 +1,10 @@
-import { RootReducers } from '../../store/slices';
 import { createSelector } from '@reduxjs/toolkit';
+
 import { TableData } from '../../components';
 import { EntryPoint } from '../../__types__';
+
+import type { RootReducers } from '../../store/slices';
+
 
 const getCurrentItemData = (state: RootReducers) => state.api.dataByApi[EntryPoint.COMPANIES].currentItem;
 export const getCurrentItemCompany = createSelector(getCurrentItemData, (currentItem) => {

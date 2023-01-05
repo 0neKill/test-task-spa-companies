@@ -2,10 +2,10 @@ import React from 'react';
 
 import './table.style.scss';
 
-import { TableMode } from '../../__types__';
-
 import { Table } from './table';
 import { TableHeadCompanies, TableHeadEmployees, type ITableHead } from '../../constants';
+
+import { TableMode } from '../../__types__';
 
 export interface TableData {
     id: string,

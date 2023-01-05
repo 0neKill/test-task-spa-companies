@@ -1,7 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import { apiSlice } from '../slices/api';
 import { api } from '../../helpers';
-import { EntryPoint } from '../../__types__';
+
+import type { EntryPoint } from '../../__types__';
 
 
 type Companies = {

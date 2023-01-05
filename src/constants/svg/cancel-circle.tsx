@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Props } from './__types__';
 
 export const CancelCircleSvg: React.FunctionComponent<Props> = ({ size = { w: 14, h: 14 }, onClick }) => {

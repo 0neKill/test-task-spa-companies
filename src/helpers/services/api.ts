@@ -1,15 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
 
-import type { Company, Employee } from '../../__types__';
+import { type Company, type Employee, EntryPoint } from '../../__types__';
 import type { ThunkArg } from '../../store/thunks';
-import { EntryPoint } from '../../__types__';
 
 
 const $api = axios.create({
     baseURL: '/data/',
 });
-
-
 
 export const RequestData = {
     [EntryPoint.COMPANIES]: {

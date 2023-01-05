@@ -1,9 +1,10 @@
-import { useDispatchedActions } from './use-dispatched';
 import React from 'react';
-import { ThunkArg } from '../../store/thunks';
+
+import { useDispatchedActions } from './use-dispatched';
 import { useTypedSelector } from './use-typed-selector';
 import { getDataByEntrypoint } from '../selectors';
 
+import type { ThunkArg } from '../../store/thunks';
 
 export const useQuery = () => {
     const { apiQueryThunk } = useDispatchedActions();

@@ -3,8 +3,8 @@ import React from 'react';
 import './home.style.scss';
 
 import {FactoryTable, SelectAll, TableData, TableDataVector} from '../../components';
-
 import {getCurrentItemCompany, useDispatchedActions, useQuery, useTypedSelector} from '../../helpers';
+
 import {EntryPoint} from '../../__types__';
 
 export const Home: React.FunctionComponent = React.memo(() => {

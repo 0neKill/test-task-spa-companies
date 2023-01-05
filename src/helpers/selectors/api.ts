@@ -1,6 +1,7 @@
-import { RootReducers } from '../../store/slices';
 import { createSelector } from '@reduxjs/toolkit';
+
 import { TableData } from '../../components';
+import { RootReducers } from '../../store/slices';
 
 const getLastEntryPoint = (state: RootReducers) => state.api.lastEntryPoint;
 const getDataByApi = (state: RootReducers) => state.api.dataByApi;
